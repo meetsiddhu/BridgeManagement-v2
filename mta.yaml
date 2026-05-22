@@ -36,7 +36,6 @@ modules:
       - name: BridgeManagementV2-destination
       - name: BridgeManagementV2-logging
       - name: BridgeManagementV2-autoscaler
-      - name: BridgeManagementV2-alert-notification
 
   - name: BridgeManagementV2-db-deployer
     type: hdb
@@ -254,19 +253,19 @@ resources:
           redirect-uris:
             - https://*~{app-api/app-uri}/**
         role-collections:
-          - name: "BMS Admin (${org}-${space})"
+          - name: "BMS Admin V2 (${org}-${space})"
             description: "Full BMS administration"
             role-template-references:
               - "$XSAPPNAME.BMS_ADMIN"
-          - name: "BMS Bridge Manager (${org}-${space})"
+          - name: "BMS Bridge Manager V2 (${org}-${space})"
             description: "Bridge register management"
             role-template-references:
               - "$XSAPPNAME.BMS_BRIDGE_MANAGER"
-          - name: "BMS Operator (${org}-${space})"
+          - name: "BMS Operator V2 (${org}-${space})"
             description: "Bridge operations"
             role-template-references:
               - "$XSAPPNAME.BMS_OPERATOR"
-          - name: "BMS Viewer (${org}-${space})"
+          - name: "BMS Viewer V2 (${org}-${space})"
             description: "Read-only access"
             role-template-references:
               - "$XSAPPNAME.BMS_VIEWER"
@@ -309,8 +308,3 @@ resources:
       service: autoscaler
       service-plan: standard
 
-  - name: BridgeManagementV2-alert-notification
-    type: org.cloudfoundry.managed-service
-    parameters:
-      service: alert-notification
-      service-plan: standard

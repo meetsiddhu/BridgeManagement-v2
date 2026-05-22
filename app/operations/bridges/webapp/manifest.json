@@ -1,7 +1,7 @@
 {
   "_version": "1.8.0",
   "sap.app": {
-    "id": "bms.operations.bridges",
+    "id": "BridgeManagementV2.operations.bridges",
     "type": "application",
     "title": "{{appTitle}}",
     "description": "{{appDescription}}",
