@@ -1,0 +1,56 @@
+{
+  "welcomeFile": "/fiori-apps.html",
+  "authenticationMethod": "route",
+  "responseHeaders": [
+    {
+      "name": "Content-Security-Policy",
+      "value": "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://ui5.sap.com https://sapui5.hana.ondemand.com https://unpkg.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://ui5.sap.com https://sapui5.hana.ondemand.com https://unpkg.com https://cdnjs.cloudflare.com; img-src 'self' data: blob: https://*.tile.openstreetmap.org https://tile.openstreetmap.org https://unpkg.com https://cdnjs.cloudflare.com; connect-src 'self' https://*.hana.ondemand.com https://ui5.sap.com; font-src 'self' data: https://ui5.sap.com https://sapui5.hana.ondemand.com https://unpkg.com; frame-ancestors 'self' https://*.hana.ondemand.com; object-src 'none'"
+    }
+  ],
+  "routes": [
+    {
+      "source": "^/fiori-apps\\.html$",
+      "localDir": ".",
+      "authenticationType": "xsuaa"
+    },
+    {
+      "source": "^/appconfig/(.*)$",
+      "localDir": ".",
+      "authenticationType": "xsuaa"
+    },
+    {
+      "source": "^/odata/(.*)$",
+      "target": "/odata/$1",
+      "destination": "srv-api",
+      "authenticationType": "xsuaa",
+      "csrfProtection": false
+    },
+    {
+      "source": "^/health(.*)$",
+      "target": "/health$1",
+      "destination": "srv-api",
+      "authenticationType": "none",
+      "csrfProtection": false
+    },
+    {
+      "source": "^/(map|dashboard|mass-upload|mass-edit|audit|access|quality|system|admin-bridges|bnac)/api/(.*)",
+      "target": "/$1/api/$2",
+      "destination": "srv-api",
+      "authenticationType": "xsuaa",
+      "csrfProtection": false
+    },
+    {
+      "source": "^/public-bridge/(.*)$",
+      "target": "/public-bridge/$1",
+      "destination": "srv-api",
+      "authenticationType": "none",
+      "csrfProtection": false
+    },
+    {
+      "source": "^/(.*)$",
+      "target": "$1",
+      "service": "html5-apps-repo-rt",
+      "authenticationType": "xsuaa"
+    }
+  ]
+}

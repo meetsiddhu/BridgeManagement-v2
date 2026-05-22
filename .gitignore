@@ -1,0 +1,32 @@
+node_modules/
+target/
+_out/
+gen/
+.gen/
+dist/
+
+.cdsrc-private.json
+default-*.json
+*.sqlite
+
+# MTA
+mta_archives/
+*_mta_build_tmp
+*.mtar
+Makefile_*.mta
+db/data/mass-upload-bridges-nsw-bulk.csv
+
+# Other
+.DS_Store
+.claude/
+.pipeline/
+.vscode/
+
+# @cap-js/cds-typer
+@cds-models
+*.sqlite-shm
+*.sqlite-wal
+
+# FUSE temp files (created when a file is deleted while still open by a process)
+.fuse_hidden*
+mta-op-*/

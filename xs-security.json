@@ -1,0 +1,101 @@
+{
+  "xsappname": "bridge-management-v2",
+  "tenant-mode": "dedicated",
+  "description": "Bridge Management System — NSW (future: multi-state)",
+  "scopes": [
+    { "name": "$XSAPPNAME.admin", "description": "Full system administration" },
+    { "name": "$XSAPPNAME.manage", "description": "Create, edit, delete bridges and restrictions" },
+    { "name": "$XSAPPNAME.operate", "description": "Manage restrictions in assigned state" },
+    { "name": "$XSAPPNAME.inspect", "description": "Record inspection findings and condition ratings" },
+    { "name": "$XSAPPNAME.view", "description": "Read-only access to bridges and restrictions" },
+    { "name": "$XSAPPNAME.executive_view", "description": "Executive KPI summary — header only, no editable tabs" },
+    { "name": "$XSAPPNAME.external_view", "description": "External/public card view — curated read-only fields, unauthenticated route" },
+    { "name": "$XSAPPNAME.certify", "description": "Approve or reject load rating certificates and permits" },
+    { "name": "$XSAPPNAME.config_manager", "description": "Enable or disable feature flags and system configuration" }
+  ],
+  "attributes": [],
+  "role-templates": [
+    {
+      "name": "BMS_ADMIN",
+      "description": "Full system access including administration and configuration",
+      "scope-references": ["$XSAPPNAME.admin", "$XSAPPNAME.manage", "$XSAPPNAME.operate", "$XSAPPNAME.inspect", "$XSAPPNAME.view", "$XSAPPNAME.certify", "$XSAPPNAME.config_manager", "$XSAPPNAME.executive_view", "$XSAPPNAME.external_view"]
+    },
+    {
+      "name": "BMS_BRIDGE_MANAGER",
+      "description": "Create, edit and manage bridges, load restrictions, and permit approvals",
+      "scope-references": ["$XSAPPNAME.manage", "$XSAPPNAME.inspect", "$XSAPPNAME.view", "$XSAPPNAME.certify"]
+    },
+    {
+      "name": "BMS_OPERATOR",
+      "description": "Manage load restrictions and record condition ratings for assigned state (NSW)",
+      "scope-references": ["$XSAPPNAME.operate", "$XSAPPNAME.inspect", "$XSAPPNAME.view"]
+    },
+    {
+      "name": "BMS_INSPECTOR",
+      "description": "Record bridge condition ratings and inspection findings",
+      "scope-references": ["$XSAPPNAME.inspect", "$XSAPPNAME.view"]
+    },
+    {
+      "name": "BMS_VIEWER",
+      "description": "Read-only access — view bridges, restrictions, maps and reports",
+      "scope-references": ["$XSAPPNAME.view"]
+    },
+    {
+      "name": "BMS_EXECUTIVE_VIEWER",
+      "description": "Senior leadership — sees header KPIs and bridge status summary, no editable sections",
+      "scope-references": ["$XSAPPNAME.executive_view", "$XSAPPNAME.view"]
+    },
+    {
+      "name": "BMS_EXTERNAL_VIEWER",
+      "description": "External stakeholders (councils, carriers) — public card view with restrictions and permit status only",
+      "scope-references": ["$XSAPPNAME.external_view"]
+    },
+    {
+      "name": "BMS_CONFIG_MANAGER",
+      "description": "Enable and disable feature flags without a code deployment",
+      "scope-references": ["$XSAPPNAME.config_manager", "$XSAPPNAME.view"]
+    }
+  ],
+  "role-collections": [
+    {
+      "name": "BMS Administrator",
+      "description": "Full BMS system administration",
+      "role-template-references": ["$XSAPPNAME.BMS_ADMIN"]
+    },
+    {
+      "name": "BMS Bridge Manager",
+      "description": "Bridge and restriction management",
+      "role-template-references": ["$XSAPPNAME.BMS_BRIDGE_MANAGER"]
+    },
+    {
+      "name": "BMS Operator",
+      "description": "Operational management of restrictions",
+      "role-template-references": ["$XSAPPNAME.BMS_OPERATOR"]
+    },
+    {
+      "name": "BMS Inspector",
+      "description": "Condition assessment and recording",
+      "role-template-references": ["$XSAPPNAME.BMS_INSPECTOR"]
+    },
+    {
+      "name": "BMS Viewer",
+      "description": "Read-only bridge network visibility",
+      "role-template-references": ["$XSAPPNAME.BMS_VIEWER"]
+    },
+    {
+      "name": "BMS Executive Viewer",
+      "description": "Executive-level KPI visibility — condition scores, risk level, open defects, cost YTD",
+      "role-template-references": ["$XSAPPNAME.BMS_EXECUTIVE_VIEWER"]
+    },
+    {
+      "name": "BMS External Viewer",
+      "description": "External public card access — active restrictions and permit status only",
+      "role-template-references": ["$XSAPPNAME.BMS_EXTERNAL_VIEWER"]
+    },
+    {
+      "name": "BMS Config Manager",
+      "description": "Feature flag management without code deployment",
+      "role-template-references": ["$XSAPPNAME.BMS_CONFIG_MANAGER"]
+    }
+  ]
+}

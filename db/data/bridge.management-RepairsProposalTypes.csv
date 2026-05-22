@@ -1,0 +1,11 @@
+code;description;active
+REPR;Structural Repair;true
+REPL;Full Replacement;true
+PATC;Patch / Surface Repair;true
+MNTN;Routine Maintenance;true
+STNG;Load Strengthening;true
+DEMO;Demolition;true
+MONI;Monitoring Only;true
+UPGR;Upgrade / Widening;true
+EMRG;Emergency Works;true
+REHB;Rehabilitation;true

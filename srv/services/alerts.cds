@@ -1,0 +1,25 @@
+using bridge from '../../db/schema';
+using { BridgeManagementService } from '../service';
+
+extend service BridgeManagementService with {
+    @restrict: [
+        { grant: ['READ'],   to: 'authenticated-user' },
+        { grant: ['CREATE','UPDATE','DELETE'], to: ['manage','admin'] }
+    ]
+    entity AlertsAndNotifications as projection on bridge.management.AlertsAndNotifications
+        actions {
+            @requires: ['manage','admin']
+            action acknowledge(note: String) returns AlertsAndNotifications;
+            @requires: ['manage','admin']
+            action resolveAlert(note: String, proofRef: String) returns AlertsAndNotifications;
+            @requires: ['manage','admin']
+            action suppress(reason: String, suppressUntil: Date) returns AlertsAndNotifications;
+        };
+
+    entity KPISnapshots as projection on bridge.management.KPISnapshots;
+
+    function getAlertSummary(state: String) returns {
+        totalOpen: Integer; critical: Integer; warning: Integer;
+        info: Integer; overdueAcknowledgement: Integer
+    };
+}

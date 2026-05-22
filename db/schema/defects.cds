@@ -1,0 +1,121 @@
+namespace bridge.management;
+using { cuid, managed } from '@sap/cds/common';
+using { bridge.management.Bridges } from './bridge-entity';
+using { bridge.management.BridgeElements } from './elements';
+using { bridge.management.InspectionStandard }         from './enum-types';
+using { bridge.management.InspectionMethodology }      from './enum-types';
+using { bridge.management.StructuralAdequacyVerdict }  from './enum-types';
+using { bridge.management.RepairMethod }               from './enum-types';
+using { bridge.management.MaintenancePriority }        from './enum-types';
+using { bridge.management.BridgeInspectionElements } from './gap-entities';
+using { bridge.management.BridgeDocuments } from './documents';
+
+// Inspection capture record — S/4 EAM owns scheduling; this captures the event data
+entity BridgeInspections : cuid, managed {
+    bridge                       : Association to Bridges @mandatory;
+    inspectionRef                : String(40);
+    inspectionDate               : Date        @mandatory;
+    inspectionType               : String(40)  @mandatory;
+
+    inspector                    : String(111) @mandatory;
+    inspectorAccreditationNumber : String(40);
+    inspectorAccreditationLevel  : String(20);
+    inspectorCompany             : String(111);
+    qualificationExpiry          : Date;
+
+    inspectionScope              : String(500);
+    inspectionStandard           : InspectionStandard;
+    weatherConditions            : String(200);
+    accessibilityIssues          : String(500);
+
+    // EAM references — populated when integration is active (nullable)
+    s4InspectionOrderRef         : String(40);
+    s4NotificationRef            : String(40);
+
+    reportStorageRef             : String(500);
+    inspectionNotes              : LargeString;
+
+    overallConditionRating       : Integer @assert.range: [1, 10];
+    criticalFindings             : Boolean default false;
+    recommendedActions           : LargeString;
+    nextInspectionRecommended    : Date;
+
+    // ── HIGH priority additions (AS5100-7 §3.2, TfNSW-BIM §3.3, AGAM §4.2) ──
+    inspectionMethodology        : InspectionMethodology;      // Visual / Under-Bridge Unit / Rope Access / Underwater / Drone
+    overallStructuralAdequacy    : StructuralAdequacyVerdict;  // Adequate | Marginal | Inadequate (TfNSW-BIM §3.3)
+    loadCarryingCapacityConfirmed : Boolean default true;      // AS 5100-7 §3.2 — inspector confirms posted capacity still valid
+    followUpRequired             : Boolean default false;      // Drives alert for bridge manager when true
+    reportIssueDate              : Date;                       // TfNSW-BIM §3.4 — formal report issue date (may differ from inspectionDate)
+
+    active                       : Boolean default true;
+    defects                      : Association to many BridgeDefects           on defects.inspection           = $self;
+    inspectionElements           : Association to many BridgeInspectionElements on inspectionElements.inspection = $self;
+    documents                    : Association to many BridgeDocuments
+                                   on documents.linkedEntityId = $self.ID and documents.linkedEntity = 'BridgeInspections';
+}
+
+// Defect capture — inspection link is optional (standalone defects allowed)
+entity BridgeDefects : cuid, managed {
+    bridge       : Association to Bridges      @mandatory;
+    inspection   : Association to BridgeInspections;
+    defectId     : String(30);
+    deteriorationMechanism : String(60);     // Corrosion | Fatigue | Impact | Scour | Overload | Chemical | Settlement | Aging
+    defectCode       : String(20);           // SIMS element defect code (e.g. BS01, SW23)
+
+    defectType   : String(40)  @mandatory;
+    defectDescription : String(500) @mandatory;
+
+    bridgeElement : String(40);
+    bridgeElementRef : Association to BridgeElements;  // optional VH-driven link to structured element
+    spanNumber    : Integer;
+    pierNumber    : Integer;
+    face          : String(60);
+    position      : String(100);
+
+    severity      : Integer @assert.range: [1, 4] @mandatory;
+    urgency       : Integer @assert.range: [1, 4] @mandatory;
+
+    dimensionLengthMm : Decimal(8,2);
+    dimensionWidthMm  : Decimal(8,2);
+    dimensionDepthMm  : Decimal(8,2);
+    photoReferences   : LargeString;
+
+    remediationStatus      : String(20) default 'Open';
+    estimatedRepairCost    : Decimal(12,2) @Measures.ISOCurrency: 'AUD';
+    plannedRemediationDate : Date;
+    actualRemediationDate  : Date;
+    remediationNotes       : String(500);
+    repairMethod           : RepairMethod;                 // SIMS §4.3 — required on remediation record
+    requiresLoadRestriction : Boolean default false;      // TfNSW-BIM §4.4 — triggers capacity review alert when true
+    maintenancePriority    : MaintenancePriority;          // AGAM §5.3 — P1 Emergency / P2 Urgent / P3 Routine / P4 Planned
+
+    // EAM references (nullable — used when eamConnected = true)
+    s4NotificationId : String(40);
+    s4OrderId        : String(40);
+    s4SyncStatus     : String(20) default 'NOT_SYNCED';
+    s4SyncDate       : Timestamp;            // Last successful sync to S/4 HANA
+    s4SyncError      : String(500);          // Last sync error message
+
+    notes   : LargeString;
+    active  : Boolean default true;
+    alertSent : Boolean default false;
+    documents : Association to many BridgeDocuments
+                on documents.linkedEntityId = $self.ID and documents.linkedEntity = 'BridgeDefects';
+}
+
+annotate BridgeInspections with @(cds.persistence.indexes: [
+    { name: 'idx_insp_bridge', columns: ['bridge_ID'] },
+    { name: 'idx_insp_date',   columns: ['inspectionDate'] },
+    { name: 'idx_insp_type',   columns: ['inspectionType'] }
+]);
+
+annotate BridgeDefects with @(cds.persistence.indexes: [
+    { name: 'idx_defect_bridge',   columns: ['bridge_ID'] },
+    { name: 'idx_defect_severity', columns: ['severity'] },
+    { name: 'idx_defect_status',   columns: ['remediationStatus'] }
+]);
+
+// inspections: standalone draft entity — no longer a composition child of Bridges
+extend entity Bridges with {
+    inspections : Association to many BridgeInspections on inspections.bridge = $self;
+}

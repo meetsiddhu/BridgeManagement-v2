@@ -1,0 +1,273 @@
+<mvc:View
+  controllerName="BridgeManagementV2.bmsadmin.controller.GisConfig"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:f="sap.ui.layout.form"
+  xmlns:core="sap.ui.core"
+  displayBlock="true">
+
+  <Page id="gisConfigPage" showHeader="true">
+
+    <customHeader>
+      <Bar>
+        <contentLeft>
+          <Title text="GIS Configuration" level="H3" />
+        </contentLeft>
+        <contentRight>
+          <Button text="Save"    icon="sap-icon://save"    press=".onSave"    type="Emphasized" />
+          <Button text="Discard" icon="sap-icon://decline"  press=".onDiscard" type="Transparent" class="sapUiSmallMarginBegin" />
+          <Button icon="sap-icon://refresh"  tooltip="Reload from server" press=".onRefresh"   type="Transparent" class="sapUiSmallMarginBegin" />
+          <Button icon="sap-icon://information" tooltip="How to use this page" press=".onShowHelp" type="Transparent" class="sapUiSmallMarginBegin" />
+        </contentRight>
+      </Bar>
+    </customHeader>
+
+    <content>
+      <VBox class="sapUiMediumMargin">
+
+        <!-- Basemap settings -->
+        <Panel headerText="Basemap Settings" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+          <f:SimpleForm layout="ColumnLayout" columnsM="1" columnsL="2" editable="true">
+            <f:content>
+              <Label text="Default Basemap" />
+              <Select id="selBasemap" selectedKey="{config>/defaultBasemap}">
+                <items>
+                  <core:Item key="osm"         text="OpenStreetMap" />
+                  <core:Item key="esriStreet"   text="Esri Street" />
+                  <core:Item key="esriSatellite" text="Esri Satellite" />
+                  <core:Item key="esriTopo"     text="Esri Topo" />
+                  <core:Item key="google"       text="Google Maps" />
+                  <core:Item key="googleSat"    text="Google Satellite" />
+                  <core:Item key="here"         text="HERE Maps" />
+                </items>
+              </Select>
+              <Label text="HERE Maps API Key" />
+              <Input id="inpHereApiKey" value="{config>/hereApiKey}" placeholder="Required only for HERE Maps basemap" type="Password" />
+            </f:content>
+          </f:SimpleForm>
+        </Panel>
+
+        <!-- Reference layers -->
+        <Panel headerText="Reference Layers" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+          <f:SimpleForm layout="ColumnLayout" columnsM="1" columnsL="2" editable="true">
+            <f:content>
+              <Label text="Show State Boundaries" />
+              <Switch id="swStateBoundaries" state="{config>/showStateBoundaries}" />
+              <Label text="Show LGA Boundaries" />
+              <Switch id="swLgaBoundaries" state="{config>/showLgaBoundaries}" />
+            </f:content>
+          </f:SimpleForm>
+        </Panel>
+
+        <!-- Advanced features -->
+        <Panel headerText="Advanced Map Features" expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+          <f:SimpleForm layout="ColumnLayout" columnsM="1" columnsL="2" editable="true">
+            <f:content>
+              <Label text="Scale Bar" />
+              <Switch id="swScaleBar" state="{config>/enableScaleBar}" />
+              <Label text="GPS / Locate Me" />
+              <Switch id="swGps" state="{config>/enableGps}" />
+              <Label text="Mini-map" />
+              <Switch id="swMinimap" state="{config>/enableMinimap}" />
+              <Label text="Heatmap Layer" />
+              <Switch id="swHeatmap" state="{config>/enableHeatmap}" />
+              <Label text="Time Slider" />
+              <Switch id="swTimeSlider" state="{config>/enableTimeSlider}" />
+              <Label text="Stats Panel" />
+              <Switch id="swStatsPanel" state="{config>/enableStatsPanel}" />
+              <Label text="Proximity Search" />
+              <Switch id="swProximity" state="{config>/enableProximity}" />
+              <Label text="MGA Coordinates" />
+              <Switch id="swMgaCoords" state="{config>/enableMgaCoords}" />
+              <Label text="Street View" />
+              <Switch id="swStreetView" state="{config>/enableStreetView}" />
+              <Label text="Condition Alerts" />
+              <Switch id="swConditionAlerts" state="{config>/enableConditionAlerts}" />
+              <Label text="Custom WMS Layers" />
+              <Switch id="swCustomWms" state="{config>/enableCustomWms}" />
+              <Label text="Server-side Clustering" />
+              <Switch id="swServerClustering" state="{config>/enableServerClustering}" />
+            </f:content>
+          </f:SimpleForm>
+        </Panel>
+
+        <!-- Thresholds -->
+        <Panel headerText="Thresholds &amp; Defaults" expandable="true" expanded="false" class="sapUiSmallMarginBottom">
+          <f:SimpleForm layout="ColumnLayout" columnsM="1" columnsL="2" editable="true">
+            <f:content>
+              <Label text="Condition Alert Threshold (1–10)" />
+              <StepInput id="siConditionAlert" value="{config>/conditionAlertThreshold}" min="1" max="10" step="1" />
+              <Label text="Proximity Default Radius (km)" />
+              <StepInput id="siProximityRadius" value="{config>/proximityDefaultRadiusKm}" min="1" max="500" step="5" />
+              <Label text="Heatmap Radius (px)" />
+              <StepInput id="siHeatmapRadius" value="{config>/heatmapRadius}" min="5" max="80" step="5" />
+              <Label text="Heatmap Blur (px)" />
+              <StepInput id="siHeatmapBlur" value="{config>/heatmapBlur}" min="5" max="50" step="5" />
+              <Label text="Viewport Loading Zoom Level" />
+              <StepInput id="siViewportZoom" value="{config>/viewportLoadingZoom}" min="6" max="14" step="1" />
+            </f:content>
+          </f:SimpleForm>
+        </Panel>
+
+        <!-- Reference Layer Library -->
+        <Panel expandable="true" expanded="true" class="sapUiSmallMarginBottom">
+          <headerToolbar>
+            <OverflowToolbar>
+              <Title text="Reference Layer Library" level="H4" />
+              <ToolbarSpacer />
+              <Button icon="sap-icon://add" text="Add Custom Layer" press=".onAddRefLayer" type="Default" />
+            </OverflowToolbar>
+          </headerToolbar>
+          <VBox class="sapUiSmallMargin">
+            <Text text="Enable layers to make them available in the Map View Reference Layers panel. Preset layers (🔒) cannot be deleted: only activated or deactivated. Layers enabled by default will be switched on when users first open the map." class="sapUiSmallMarginBottom" wrapping="true" />
+            <Table id="tblRefLayers" items="{refLayers>/layers}" noDataText="No reference layers configured." growing="true" growingThreshold="20">
+              <columns>
+                <Column width="3rem" hAlign="Center"><Text text="On"/></Column>
+                <Column width="8rem"><Text text="Category"/></Column>
+                <Column><Text text="Name"/></Column>
+                <Column width="4rem"><Text text="Type"/></Column>
+                <Column><Text text="Description"/></Column>
+                <Column width="5rem" hAlign="Center"><Text text="Default On"/></Column>
+                <Column width="6rem" hAlign="Center"><Text text="Actions"/></Column>
+              </columns>
+              <items>
+                <ColumnListItem>
+                  <cells>
+                    <Switch state="{refLayers>active}" change=".onToggleRefLayerActive" />
+                    <ObjectStatus text="{refLayers>category}" state="{= ${refLayers>category} === 'Weather' ? 'Information' : ${refLayers>category} === 'Flood' ? 'Warning' : ${refLayers>category} === 'Emergency' ? 'Error' : 'None' }" />
+                    <VBox>
+                      <Text text="{refLayers>name}" />
+                      <Text text="{refLayers>url}" class="sapUiTinyMarginTop" wrapping="false" maxLines="1" />
+                    </VBox>
+                    <Text text="{refLayers>layerType}" />
+                    <Text text="{refLayers>description}" maxLines="2" wrapping="true" />
+                    <Switch state="{refLayers>enabledByDefault}" change=".onToggleRefLayerDefault" />
+                    <HBox>
+                      <Button icon="sap-icon://edit" type="Transparent" tooltip="Edit layer" press=".onEditRefLayer" visible="{= !${refLayers>isPreset} }" />
+                      <Button icon="sap-icon://locked" type="Transparent" tooltip="System preset: cannot be deleted" visible="{refLayers>isPreset}" enabled="false" />
+                      <Button icon="sap-icon://delete" type="Transparent" tooltip="Delete layer" press=".onDeleteRefLayer" visible="{= !${refLayers>isPreset} }" />
+                    </HBox>
+                  </cells>
+                </ColumnListItem>
+              </items>
+            </Table>
+          </VBox>
+        </Panel>
+
+        <!-- Custom WMS layers -->
+        <Panel headerText="Custom WMS Layers" expandable="true" expanded="false"
+               visible="{config>/enableCustomWms}" class="sapUiSmallMarginBottom">
+          <headerToolbar>
+            <Toolbar>
+              <Title text="WMS Layer List" level="H4" />
+              <ToolbarSpacer />
+              <Button icon="sap-icon://add" text="Add Layer" press=".onAddCustomWms" />
+            </Toolbar>
+          </headerToolbar>
+          <content>
+            <Text text="Add external WMS tile services to appear as toggleable overlays in the Bridge Map." class="sapUiSmallMargin" />
+            <Table id="tblCustomWms" items="{config>/customWmsLayers}" noDataText="No custom WMS layers defined. Click Add Layer to create one.">
+              <columns>
+                <Column><Text text="Layer Name" /></Column>
+                <Column><Text text="WMS URL" /></Column>
+                <Column><Text text="Layer Names" /></Column>
+                <Column width="4rem" hAlign="Center"><Text text="Del" /></Column>
+              </columns>
+              <items>
+                <ColumnListItem>
+                  <cells>
+                    <Input value="{config>label}" placeholder="Display name" />
+                    <Input value="{config>url}" placeholder="https://..." />
+                    <Input value="{config>layers}" placeholder="layer1,layer2" />
+                    <Button icon="sap-icon://delete" type="Transparent" press=".onDeleteCustomWms" />
+                  </cells>
+                </ColumnListItem>
+              </items>
+            </Table>
+          </content>
+        </Panel>
+
+      </VBox>
+    </content>
+
+  </Page>
+
+  <mvc:dependents>
+    <Dialog id="refLayerDialog" contentWidth="520px" class="sapUiContentPadding">
+      <content>
+        <ScrollContainer width="100%" vertical="true" height="70vh">
+          <VBox class="sapUiSmallMargin">
+            <VBox class="sapUiSmallMarginBottom">
+              <Label text="Layer Name" required="true"/>
+              <Input value="{dlgLayer>/name}" placeholder="e.g. BOM Rainfall Radar" width="100%"/>
+            </VBox>
+            <VBox class="sapUiSmallMarginBottom">
+              <Label text="Category"/>
+              <Select selectedKey="{dlgLayer>/category}" width="100%">
+                <items>
+                  <core:Item key="Weather"        text="Weather"/>
+                  <core:Item key="Flood"          text="Flood"/>
+                  <core:Item key="Traffic"        text="Traffic"/>
+                  <core:Item key="Geology"        text="Geology"/>
+                  <core:Item key="Infrastructure" text="Infrastructure"/>
+                  <core:Item key="Environment"    text="Environment"/>
+                  <core:Item key="Emergency"      text="Emergency"/>
+                  <core:Item key="Administrative" text="Administrative"/>
+                  <core:Item key="Custom"         text="Custom"/>
+                </items>
+              </Select>
+            </VBox>
+            <VBox class="sapUiSmallMarginBottom">
+              <Label text="Layer Type"/>
+              <Select selectedKey="{dlgLayer>/layerType}" width="100%">
+                <items>
+                  <core:Item key="WMS"        text="WMS"/>
+                  <core:Item key="XYZ"        text="XYZ"/>
+                  <core:Item key="ArcGISRest" text="ArcGISRest"/>
+                  <core:Item key="GeoJSON"    text="GeoJSON"/>
+                </items>
+              </Select>
+            </VBox>
+            <VBox class="sapUiSmallMarginBottom">
+              <Label text="Service URL" required="true"/>
+              <Input value="{dlgLayer>/url}" placeholder="https://services.ga.gov.au/..." width="100%"/>
+            </VBox>
+            <VBox class="sapUiSmallMarginBottom">
+              <Label text="Sub-layers / Layer IDs"/>
+              <Input value="{dlgLayer>/subLayers}" placeholder="WMS: comma-separated layer names" width="100%"/>
+            </VBox>
+            <VBox class="sapUiSmallMarginBottom">
+              <Label text="Attribution"/>
+              <Input value="{dlgLayer>/attribution}" placeholder="© Data Provider" width="100%"/>
+            </VBox>
+            <VBox class="sapUiSmallMarginBottom">
+              <Label text="Description"/>
+              <Input value="{dlgLayer>/description}" placeholder="Brief description for map users" width="100%"/>
+            </VBox>
+            <VBox class="sapUiSmallMarginBottom">
+              <Label text="Opacity (0 – 1)"/>
+              <Slider value="{dlgLayer>/opacity}" min="0" max="1" step="0.05" width="100%"
+                      enableTickmarks="false" showAdvancedTooltip="true"/>
+            </VBox>
+            <HBox alignItems="Center" class="sapUiSmallMarginBottom">
+              <Label text="Enable by default" width="12rem"/>
+              <Switch state="{dlgLayer>/enabledByDefault}"/>
+            </HBox>
+          </VBox>
+        </ScrollContainer>
+      </content>
+      <beginButton><Button id="refLayerDialogSaveBtn" text="Add" type="Emphasized" press=".onRefLayerDialogSave"/></beginButton>
+      <endButton><Button text="Cancel" press=".onRefLayerDialogClose"/></endButton>
+    </Dialog>
+
+    <Dialog id="infoDialog" contentWidth="480px">
+      <content>
+        <ScrollContainer width="100%" vertical="true" height="60vh">
+          <FormattedText id="infoDialogHtml" width="100%" class="sapUiSmallMargin"/>
+        </ScrollContainer>
+      </content>
+      <endButton><Button text="Close" press=".onInfoDialogClose"/></endButton>
+    </Dialog>
+  </mvc:dependents>
+
+</mvc:View>
