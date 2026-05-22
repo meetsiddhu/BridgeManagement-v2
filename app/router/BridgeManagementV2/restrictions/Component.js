@@ -1,0 +1,2 @@
+sap.ui.define(["sap/fe/core/AppComponent"],function(t){"use strict";var e="/restrictions/webapp/ext/controller/NumericInputGuard.js";function n(){if(document.getElementById("_restriction_numeric_guard_script"))return;var t=document.createElement("script");t.id="_restriction_numeric_guard_script";t.src=e;document.head.appendChild(t)}return t.extend("BridgeManagementV2.restrictions.Component",{metadata:{manifest:"json"},init:function(){t.prototype.init.apply(this,arguments);n()}})});
+//# sourceMappingURL=Component.js.map

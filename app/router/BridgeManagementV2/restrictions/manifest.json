@@ -1,0 +1,145 @@
+{
+    "_version": "1.8.0",
+    "sap.app": {
+        "id": "BridgeManagementV2.restrictions",
+        "type": "application",
+        "title": "{{appTitle}}",
+        "description": "{{appDescription}}",
+        "i18n": "i18n/i18n.properties",
+        "applicationVersion": {
+            "version": "1.0.0"
+        },
+        "dataSources": {
+            "AdminService": {
+                "uri": "odata/v4/admin/",
+                "type": "OData",
+                "settings": {
+                    "odataVersion": "4.0"
+                }
+            }
+        },
+        "crossNavigation": {
+            "inbounds": {
+                "Restrictions-manage": {
+                    "signature": {
+                        "parameters": {},
+                        "additionalParameters": "allowed"
+                    },
+                    "title": "{{appTitle}}",
+                    "subTitle": "{{appSubTitle}}",
+                    "icon": "sap-icon://alert",
+                    "semanticObject": "Restrictions",
+                    "action": "manage"
+                }
+            }
+        }
+    },
+    "sap.ui5": {
+        "dependencies": {
+            "minUI5Version": "1.136.0",
+            "libs": {
+                "sap.fe.templates": {}
+            }
+        },
+        "models": {
+            "i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "uri": "i18n/i18n.properties"
+            },
+            "": {
+                "dataSource": "AdminService",
+                "settings": {
+                    "synchronizationMode": "None",
+                    "operationMode": "Server",
+                    "autoExpandSelect": true,
+                    "earlyRequests": true
+                },
+                "type": "sap.ui.model.odata.v4.ODataModel"
+            }
+        },
+        "routing": {
+            "routes": [
+                {
+                    "pattern": ":?query:",
+                    "name": "RestrictionsList",
+                    "target": "RestrictionsList"
+                },
+                {
+                    "pattern": "Restrictions({key}):?query:",
+                    "name": "RestrictionsDetails",
+                    "target": "RestrictionsDetails"
+                }
+            ],
+            "targets": {
+                "RestrictionsList": {
+                    "type": "Component",
+                    "id": "RestrictionsList",
+                    "name": "sap.fe.templates.ListReport",
+                    "options": {
+                        "settings": {
+                            "contextPath": "/Restrictions",
+                            "liveMode": true,
+                            "navigation": {
+                                "Restrictions": {
+                                    "detail": {
+                                        "route": "RestrictionsDetails"
+                                    }
+                                }
+                            },
+                            "controlConfiguration": {
+                                "@com.sap.vocabularies.UI.v1.LineItem": {
+                                    "tableSettings": {
+                                        "type": "ResponsiveTable",
+                                        "enablePaste": false
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "RestrictionsDetails": {
+                    "type": "Component",
+                    "id": "RestrictionsDetails",
+                    "name": "sap.fe.templates.ObjectPage",
+                    "options": {
+                        "settings": {
+                            "contextPath": "/Restrictions",
+                            "editableHeaderContent": false,
+                            "content": {
+                                "body": {
+                                    "sections": {
+                                        "customAttributesSection": {
+                                            "template": "BridgeManagementV2.restrictions.ext.fragment.CustomAttributes",
+                                            "title": "Custom Attributes",
+                                            "position": {
+                                                "placement": "After",
+                                                "anchor": "GeneralInformation"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "contentDensities": {
+            "compact": true,
+            "cozy": true
+        },
+        "flexBundle": false
+    },
+    "sap.ui": {
+        "technology": "UI5",
+        "deviceTypes": {
+            "desktop": true,
+            "tablet": true,
+            "phone": true
+        }
+    },
+    "sap.fiori": {
+        "registrationIds": [],
+        "archeType": "transactional"
+    }
+}

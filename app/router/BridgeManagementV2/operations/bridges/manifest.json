@@ -1,0 +1,67 @@
+{
+    "_version": "1.8.0",
+    "sap.app": {
+        "id": "BridgeManagementV2.operations.bridges",
+        "type": "application",
+        "title": "{{appTitle}}",
+        "description": "{{appDescription}}",
+        "i18n": "i18n/i18n.properties",
+        "applicationVersion": {
+            "version": "1.0.0"
+        },
+        "dataSources": {},
+        "crossNavigation": {
+            "inbounds": {
+                "Bridges-manage": {
+                    "semanticObject": "Bridges",
+                    "action": "manage",
+                    "signature": {
+                        "parameters": {},
+                        "additionalParameters": "allowed"
+                    },
+                    "title": "{{appTitle}}",
+                    "icon": "sap-icon://functional-location"
+                }
+            }
+        }
+    },
+    "sap.ui5": {
+        "dependencies": {
+            "minUI5Version": "1.120.0",
+            "libs": {
+                "sap.m": {},
+                "sap.ui.core": {},
+                "sap.ui.layout": {}
+            }
+        },
+        "models": {
+            "i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "uri": "i18n/i18n.properties"
+            }
+        },
+        "rootView": {
+            "viewName": "bms.operations.bridges.view.Main",
+            "type": "XML",
+            "async": true,
+            "id": "root"
+        },
+        "contentDensities": {
+            "compact": true,
+            "cozy": true
+        },
+        "flexBundle": false
+    },
+    "sap.ui": {
+        "technology": "UI5",
+        "deviceTypes": {
+            "desktop": true,
+            "tablet": true,
+            "phone": true
+        }
+    },
+    "sap.fiori": {
+        "registrationIds": [],
+        "archeType": "analytical"
+    }
+}

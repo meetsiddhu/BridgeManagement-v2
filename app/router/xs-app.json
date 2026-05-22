@@ -47,6 +47,11 @@
       "csrfProtection": false
     },
     {
+      "source": "^/BridgeManagementV2/(.*)$",
+      "localDir": ".",
+      "authenticationType": "xsuaa"
+    },
+    {
       "source": "^/(.*)$",
       "target": "$1",
       "service": "html5-apps-repo-rt",
