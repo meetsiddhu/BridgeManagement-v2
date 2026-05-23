@@ -14,6 +14,11 @@
       "authenticationType": "xsuaa"
     },
     {
+      "source": "^/favicon\\.ico$",
+      "localDir": ".",
+      "authenticationType": "none"
+    },
+    {
       "source": "^/appconfig/(.*)$",
       "localDir": ".",
       "authenticationType": "xsuaa"

@@ -4,10 +4,11 @@ sap.ui.define([
 ], function (AppComponent, JSONModel) {
     "use strict";
 
-    var GIS_SCRIPT = "/admin-bridges/webapp/ext/controller/gisMapInit.js";
-    var NUMERIC_GUARD_SCRIPT = "/admin-bridges/webapp/ext/controller/NumericInputGuard.js";
-    var RESTRICTIONS_VALIDATION_SCRIPT = "/admin-bridges/webapp/ext/controller/RestrictionsValidation.js";
-    var CUSTOM_ATTRS_SCRIPT = "/admin-bridges/webapp/ext/controller/CustomAttributesInit.js";
+    var _base = sap.ui.require.toUrl("BridgeManagementV2/adminbridges/ext/controller/");
+    var GIS_SCRIPT = _base + "gisMapInit.js";
+    var NUMERIC_GUARD_SCRIPT = _base + "NumericInputGuard.js";
+    var RESTRICTIONS_VALIDATION_SCRIPT = _base + "RestrictionsValidation.js";
+    var CUSTOM_ATTRS_SCRIPT = _base + "CustomAttributesInit.js";
 
     function loadScript(id, src) {
         if (document.getElementById(id)) return;
