@@ -4,7 +4,7 @@
     &lt;script&gt;
       (function() {
         var customAttributesScript = document.createElement('script');
-        customAttributesScript.src = '../webapp/ext/controller/CustomAttributesRestrInit.js?' + Date.now();
+        customAttributesScript.src = sap.ui.require.toUrl('BridgeManagementV2/restrictions/ext/controller/CustomAttributesRestrInit') + '.js?' + Date.now();
         document.head.appendChild(customAttributesScript);
       })();
     &lt;/script&gt;

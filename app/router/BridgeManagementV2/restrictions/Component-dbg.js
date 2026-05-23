@@ -1,7 +1,8 @@
 sap.ui.define(["sap/fe/core/AppComponent"], function (AppComponent) {
   "use strict";
 
-  var NUMERIC_GUARD_SCRIPT = "/restrictions/webapp/ext/controller/NumericInputGuard.js";
+  var _restr_base = sap.ui.require.toUrl("BridgeManagementV2/restrictions/ext/controller/");
+  var NUMERIC_GUARD_SCRIPT = _restr_base + "NumericInputGuard.js";
 
   function startNumericInputGuard() {
     if (document.getElementById("_restriction_numeric_guard_script")) return;
