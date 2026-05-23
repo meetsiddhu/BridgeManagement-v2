@@ -2,8 +2,12 @@ const cds = require('@sap/cds')
 const express = require('express')
 const { SELECT, UPDATE } = cds.ql
 
+const featureFlagsRouter = require('./feature-flags-router')
+
 const router = express.Router()
 router.use(express.json())
+
+router.use('/features', featureFlagsRouter)
 
 router.get('/config', async (_req, res) => {
   try {
@@ -33,6 +37,15 @@ router.patch('/config/:key', async (req, res) => {
     invalidateCache(key)
     res.json({ success: true })
   } catch (error) { res.status(500).json({ error: { message: error.message } }) }
+})
+
+router.get('/user-info', (req, res) => {
+  const userRoles = req.user?.roles || req.authInfo?.getGrantedScopes?.() || []
+  res.json({
+    id: req.user?.id || req.user?.name || 'unknown',
+    scopes: userRoles,
+    canManage: ['admin', 'config_manager'].some(s => userRoles.includes(s))
+  })
 })
 
 router.get('/banner', async (_req, res) => {

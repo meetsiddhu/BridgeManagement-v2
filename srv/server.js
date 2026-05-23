@@ -17,7 +17,6 @@ const auditRouter        = require('./routers/audit-router')
 const accessRouter       = require('./routers/access-router')
 const qualityRouter      = require('./routers/quality-router')
 const systemRouter       = require('./routers/system-router')
-const featureFlagsRouter = require('./routers/feature-flags-router')
 const adminBridgeRouter  = require('./routers/admin-bridge-router')
 const bnacRouter         = require('./routers/bnac-router')
 
@@ -91,10 +90,7 @@ cds.on('bootstrap', (app) => {
   app.use('/audit/api',       requiresAuthentication, requireScope('admin', 'manage'), auditRouter)
   app.use('/access/api',      requiresAuthentication, accessRouter)
   app.use('/quality/api',     requiresAuthentication, validateCsrfToken, qualityRouter)
-  app.use('/system/api',      requiresAuthentication, requireScope('admin'), validateCsrfToken, systemRouter)
-
-  // Feature flags: read-only for all authenticated users; write requires scope (enforced in router)
-  app.use('/system/api/features', requiresAuthentication, featureFlagsRouter)
+  app.use('/system/api',      requiresAuthentication, requireScope('admin', 'manage', 'operate', 'inspect', 'view', 'executive_view', 'certify', 'config_manager'), validateCsrfToken, systemRouter)
 
   app.use('/admin-bridges/api', requiresAuthentication, requireScope('admin', 'manage', 'inspect'), validateCsrfToken, adminBridgeRouter)
 

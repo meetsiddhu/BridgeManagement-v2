@@ -27,6 +27,10 @@ router.get('/', async (_req, res) => {
 
 router.patch('/:key', async (req, res) => {
   try {
+    const userRoles = req.user?.roles || req.authInfo?.getGrantedScopes?.() || []
+    if (!['admin', 'config_manager'].some(s => userRoles.includes(s)))
+      return res.status(403).json({ error: 'Insufficient scope', code: 'FORBIDDEN', required: ['admin', 'config_manager'] })
+
     const flagKey = req.params.key
     const configKey = 'feature.' + flagKey
     const { enabled } = req.body || {}
